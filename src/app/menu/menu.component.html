@@ -11,8 +11,8 @@
         <a class="nav-link position-relative" [routerLink]="['/basket']">
           Voir mon panier
 
-          <span *ngIf="numberOfBasketItems" class="position-absolute top-0 start-100 translate-middle badge bg-dark">
-            {{ numberOfBasketItems }}
+          <span *ngIf="numberOfItems" class="position-absolute top-0 start-100 translate-middle badge bg-dark">
+            {{ numberOfItems }}
           </span>
         </a>
       </li>

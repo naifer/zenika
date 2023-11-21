@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ApiService } from '../shared/services/api.service';
-import { MockApiService } from '../shared/services/api.service.mock';
 import { BasketComponent } from './basket.component';
+import { BasketService } from './basket.service';
+import { MockBasketService } from './basket.service.mock';
 
 describe('BasketComponent', () => {
   let component: BasketComponent;
@@ -14,8 +14,8 @@ describe('BasketComponent', () => {
       imports: [RouterTestingModule],
       providers: [
         {
-          provide: ApiService,
-          useValue: MockApiService,
+          provide: BasketService,
+          useValue: MockBasketService,
         },
       ],
     });

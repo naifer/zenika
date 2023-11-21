@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ApiService } from '../shared/services/api.service';
 
 @Component({
@@ -9,10 +9,9 @@ import { ApiService } from '../shared/services/api.service';
 export class FooterComponent {
   protected fullYear = new Date().getUTCFullYear();
 
-  constructor(
-    private apiService: ApiService,
-    @Inject(DOCUMENT) private document: Document,
-  ) {}
+  private apiService = inject(ApiService);
+
+  private document = inject(DOCUMENT);
 
   protected __kaboom__() {
     this.apiService.__kaboom__().subscribe(() => this.document.location.reload());

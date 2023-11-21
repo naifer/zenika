@@ -1,45 +1,44 @@
-import { Component, inject } from '@angular/core';
-import { MY_TOKEN } from '../app.provider';
-import { BasketItem } from '../basket/basket.types';
-import { Product } from '../product/product.types';
-import { ApiService } from '../shared/services/api.service';
+import { Component, inject, OnInit } from '@angular/core';
+import { zip } from 'rxjs';
+import { WELCOME_MSG } from '../app.token';
+import { BasketService } from '../basket/basket.service';
+import { CatalogService } from './catalog.service';
+import { Product } from './product/product.types';
 
 @Component({
   selector: 'app-catalog',
   templateUrl: './catalog.component.html',
 })
-export class CatalogComponent {
-  protected products: Product[] = [];
+export class CatalogComponent implements OnInit {
+  protected welcomeMsg = inject(WELCOME_MSG);
 
-  private basketItems: BasketItem[] = [];
+  private basketService = inject(BasketService);
 
-  protected welcomeMsg = inject(MY_TOKEN);
+  private catalogService = inject(CatalogService);
 
-  constructor(private apiService: ApiService) {
-    this.apiService.getProducts().subscribe((products) => (this.products = products));
-    this.apiService.getBasket().subscribe((basketItems) => (this.basketItems = basketItems));
+  protected get total() {
+    return this.basketService.total;
   }
 
-  protected get basketTotal(): number {
-    return this.basketItems.reduce((total: number, { price }) => total + price, 0);
+  protected get products() {
+    return this.catalogService.products;
+  }
+
+  protected get isStockEmpty() {
+    return this.catalogService.isStockEmpty;
+  }
+
+  protected isAvailable(product: Product) {
+    return this.catalogService.isAvailable(product);
+  }
+
+  ngOnInit(): void {
+    zip([this.basketService.fetch(), this.catalogService.fetch()]).subscribe();
   }
 
   protected addToBasket(product: Product): void {
-    this.apiService.addToBasket(product.id).subscribe((basketItem) => {
-      this.basketItems.push(basketItem);
-      this.decreaseStock(product);
+    this.basketService.addItem(product.id).subscribe(() => {
+      this.catalogService.decreaseStock(product.id);
     });
-  }
-
-  private decreaseStock(product: Product): void {
-    product.stock -= 1;
-  }
-
-  protected isAvailable(product: Product): boolean {
-    return product.stock !== 0;
-  }
-
-  protected get isStockEmpty(): boolean {
-    return this.products.every(({ stock }) => stock === 0);
   }
 }

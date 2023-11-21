@@ -1,38 +1,35 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BasketService } from '../shared/services/basket-service/basket.service';
+import { Customer } from '../customer/customer.types';
+import { BasketService } from './basket.service';
 
 @Component({
   selector: 'app-basket',
   templateUrl: './basket.component.html',
 })
-export class BasketComponent {
+export class BasketComponent implements OnInit {
+  protected customer: Customer = { name: '', address: '', creditCard: '' };
+
   private basketService = inject(BasketService);
-  /// protected basketItems: BasketItem[] = [];
-  protected get basketItems() {
+
+  private router = inject(Router);
+
+  protected get items() {
     return this.basketService.items;
   }
-  //protected customer: Customer = { name: '', address: '', creditCard: '' };
 
-  constructor(
-    //private apiService: ApiService,
-    private router: Router,
-  ) {
-    //this.apiService.getBasket().subscribe((basketItems) => (this.basketItems = basketItems));
-    this.basketService.fetch().subscribe();
+  protected get total() {
+    return this.basketService.total;
   }
 
-  protected get basketTotal(): number {
-    return this.basketItems.reduce((total, { price }) => total + price, 0);
+  ngOnInit(): void {
+    this.basketService.fetch().subscribe();
   }
 
   protected checkout(event: Event): void {
     event.stopPropagation();
     event.preventDefault();
 
-    this.apiService.checkoutBasket(this.customer).subscribe(() => {
-      this.basketItems = [];
-      this.router.navigate(['']);
-    });
+    this.basketService.checkout(this.customer).subscribe(() => this.router.navigate(['']));
   }
 }
