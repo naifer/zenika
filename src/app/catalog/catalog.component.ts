@@ -17,15 +17,15 @@ export class CatalogComponent implements OnInit {
   private catalogService = inject(CatalogService);
 
   protected get total() {
-    return this.basketService.total;
+    return this.basketService.total$;
   }
 
   protected get products() {
-    return this.catalogService.products;
+    return this.catalogService.products$;
   }
 
   protected get isStockEmpty() {
-    return this.catalogService.isStockEmpty;
+    return this.catalogService.isStockEmpty$;
   }
 
   protected isAvailable(product: Product) {

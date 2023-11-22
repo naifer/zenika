@@ -14,13 +14,11 @@ export class BasketComponent implements OnInit {
 
   private router = inject(Router);
 
-  protected get items() {
-    return this.basketService.items;
-  }
+  protected items$ = this.basketService.basket$;
 
-  protected get total() {
-    return this.basketService.total;
-  }
+  protected total$ = this.basketService.total$;
+
+  protected length$ = this.basketService.numberOfItems$;
 
   ngOnInit(): void {
     this.basketService.fetch().subscribe();

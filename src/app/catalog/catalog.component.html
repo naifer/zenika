@@ -13,5 +13,5 @@
     <app-product class="col" *ngIf="isAvailable(product)" [product]="product" (addToBasket)="addToBasket($event)" />
   </ng-container>
 
-  <div *ngIf="isStockEmpty" class="col text-secondary">Désolé, notre stock est vide !</div>
+  <div *ngIf="isStockEmpty | async" class="col text-secondary">Désolé, notre stock est vide !</div>
 </div>
